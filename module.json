@@ -1,0 +1,41 @@
+{
+  "title": "Spotify",
+
+  "content_scripts": [
+    {
+      "id": "main",
+      "conditions": [
+        {
+          "pattern": "*://open.spotify.com/*",
+          "pageUrl": {
+            "hostEquals": "open.spotify.com"
+          }
+        }
+      ],
+      "js": [
+        "common.js",
+        "source/common.js",
+        "source/spotify/spotify.js"
+      ]
+    }
+  ],
+  "origins": [
+    "*://api.spotify.com/*",
+    "*://open.spotify.com/*"
+  ],
+
+  "services": [
+    "configuration",
+
+    "source/activity"
+  ],
+  "web_accessible_resources": [
+    "source/spotify/shim/shim.js"
+  ],
+
+  "webpack": {
+    "modules": [
+      "shim"
+    ]
+  }
+}
