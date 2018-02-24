@@ -18,7 +18,7 @@ export default class UserInterface extends Interface {
         return this.interfaces.notifications;
     }
 
-    get() {
+    fetch() {
         return this.get(`v1/${this.username}`, {
             authenticated: true
         });
