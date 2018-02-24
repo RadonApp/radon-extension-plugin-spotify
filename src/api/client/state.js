@@ -1,5 +1,6 @@
 import ForEach from 'lodash-es/forEach';
 import Get from 'lodash-es/get';
+import Merge from 'lodash-es/merge';
 
 import Interface from '../core/interface';
 import {changedPaths} from '../core/helpers';
@@ -58,7 +59,7 @@ export default class ClientStateInterface extends Interface {
         });
 
         // Update current state
-        this.current = state;
+        this.current = Merge(this.current, state);
 
         // Emit change events
         ForEach(changed, (path) => {
