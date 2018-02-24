@@ -7,7 +7,10 @@ import SpotifyShim from '../shim';
 
 
 export default class Interface extends EventEmitter {
-    static event = 'https://api.spotify.com';
+    static eventPrefixes = [
+        'https://api.spotify.com'
+    ];
+
     static url = 'https://api.spotify.com';
 
     constructor() {
@@ -19,8 +22,8 @@ export default class Interface extends EventEmitter {
         this.on('message', this.onMessage.bind(this));
     }
 
-    get event() {
-        return this.constructor.event;
+    get eventPrefixes() {
+        return this.constructor.eventPrefixes;
     }
 
     get url() {
@@ -114,10 +117,18 @@ export default class Interface extends EventEmitter {
             return;
         }
 
-        // Emit event
-        if(message.uri.indexOf(this.event) === 0) {
+        // Find matching event prefix
+        ForEach(this.eventPrefixes, (prefix) => {
+            if(message.uri.indexOf(prefix) !== 0) {
+                return true;
+            }
+
+            // Emit events
             this.emit('event', message);
-        }
+
+            // Exit iterator
+            return false;
+        });
 
         // Emit to children
         ForEach(this.interfaces, (intf) =>

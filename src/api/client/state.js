@@ -6,7 +6,11 @@ import {changedPaths} from '../core/helpers';
 
 
 export default class ClientStateInterface extends Interface {
-    static event = 'https://api.spotify.com/connect-api/v2/state';
+    static eventPrefixes = [
+        'https://api.spotify.com/connect-api/v2/state/',
+        'https://gae-spclient.spotify.com/connect-api/v2/state/'
+    ];
+
     static url = 'https://gae-spclient.spotify.com/connect-api/v2/state';
 
     constructor() {
