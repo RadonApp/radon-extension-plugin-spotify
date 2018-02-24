@@ -1,7 +1,8 @@
 /* eslint-disable no-new */
-import Cookie from 'js-cookie';
 import EventEmitter from 'eventemitter3';
 import IsNil from 'lodash-es/isNil';
+
+import Cookie from 'neon-extension-framework/document/cookie';
 
 
 export class ShimRequests extends EventEmitter {
@@ -60,10 +61,13 @@ export class Shim {
     }
 
     authorization() {
+        let cookies = Cookie.all();
+
+        // Emit authorization details
         this._emit('authorization', {
-            token: Cookie.get('wp_access_token'),
-            expiresAt: Cookie.get('wp_expiration'),
-            expiresIn: Cookie.get('wp_expires_in')
+            token: cookies['wp_access_token'],
+            expiresAt: cookies['wp_expiration'],
+            expiresIn: cookies['wp_expires_in']
         });
     }
 
