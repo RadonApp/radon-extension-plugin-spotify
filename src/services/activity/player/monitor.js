@@ -158,7 +158,7 @@ export default class PlayerMonitor extends EventEmitter {
         try {
             instance = this._createTrack(artist, album, track);
         } catch(e) {
-            Log.error('Unable to create track: %s', e.message, e);
+            Log.error('Unable to create track: %s', e.message || e);
         }
 
         // Ensure track exists
