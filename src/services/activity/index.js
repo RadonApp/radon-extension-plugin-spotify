@@ -1,67 +1,162 @@
-import ActivityService from 'neon-extension-framework/services/source/activity';
+import Find from 'lodash-es/find';
+import Get from 'lodash-es/get';
+import IsNil from 'lodash-es/isNil';
+import {Cache} from 'memory-cache';
+
+import ActivityService, {ActivityEngine} from 'neon-extension-framework/services/source/activity';
 import Log from 'neon-extension-source-spotify/core/logger';
 import Plugin from 'neon-extension-source-spotify/core/plugin';
 import Registry from 'neon-extension-framework/core/registry';
 import SpotifyApi from 'neon-extension-source-spotify/api';
+import {Artist} from 'neon-extension-framework/models/item/music';
 import {awaitPage} from 'neon-extension-source-spotify/core/helpers';
+import {cleanTitle} from 'neon-extension-framework/core/helpers';
 
+import PlayerMonitor from './player/monitor';
+
+
+const AlbumCacheExpiry = 3 * 60 * 60 * 1000;  // 3 hours
 
 export class SpotifyActivityService extends ActivityService {
     constructor() {
         super(Plugin);
 
-        // Bind to events
-        SpotifyApi.client.state.on('player_state', this.onPlayerStateChanged.bind(this));
-        SpotifyApi.client.state.on('player_state.is_playing', this.onPlayingChanged.bind(this));
-        SpotifyApi.client.state.on('player_state.is_paused', this.onPausedChanged.bind(this));
-        SpotifyApi.client.state.on('player_state.track.uri', this.onTrackChanged.bind(this));
+        this.engine = null;
+        this.monitor = null;
+
+        this.albums = new Cache();
     }
 
     initialize() {
         super.initialize();
+
+        // Construct activity engine
+        this.engine = new ActivityEngine(this.plugin, {
+            fetchMetadata: this.fetchMetadata.bind(this),
+
+            isEnabled: () => true
+        });
 
         // Bind activity service (once the page has loaded)
         awaitPage().then(() => this.bind());
     }
 
     bind() {
-        return Promise.resolve()
-            // Inject shim
-            .then(() => SpotifyApi.shim.inject().catch((err) => {
-                Log.error('Unable to inject shim: %s', err.message, err);
-                return Promise.reject(err);
-            }))
-            // Connect to events websocket
-            .then(() => SpotifyApi.events.connect().catch((err) => {
-                Log.error('Unable to connect to the events websocket: %s', err.message, err);
-                return Promise.reject(err);
-            }));
+        // Initialize player monitor
+        this.monitor = new PlayerMonitor();
+
+        // Bind activity engine to monitor
+        this.engine.bind(this.monitor);
+
+        // Inject shim into page
+        return SpotifyApi.shim.inject().then(() => {
+            // Bind player monitor to page
+            return this.monitor.bind(document);
+        }, (err) => {
+            console.error('Unable to inject shim: %s', err.message, err);
+            return Promise.reject(err);
+        });
     }
 
-    // region Event Handlers
+    fetchMetadata(item) {
+        let albumUri = Get(item.album.keys, [this.plugin.id, 'uri']);
 
-    onPlayingChanged(playing) {
-        console.log(`Playing changed to ${playing}`);
+        if(IsNil(albumUri)) {
+            return Promise.resolve(item);
+        }
+
+        let fetchedAt = Date.now();
+
+        // Update item `fetchedAt` timestamp
+        item.update(Plugin.id, { fetchedAt });
+
+        // Fetch album metadata
+        console.log('Fetching metadata for album "%s" (track: %o)', albumUri, item);
+
+        return this.fetchAlbum(albumUri).then((album) => {
+            let artist = album.artists[0];
+
+            // Update album
+            item.album.update(this.plugin.id, {
+                // Metadata
+                title: album.name,
+
+                // Timestamps
+                fetchedAt
+            });
+
+            // Create album artist
+            if(IsNil(item.album.artist)) {
+                item.album.artist = new Artist();
+            }
+
+            item.album.artist.update(this.plugin.id, {
+                keys: {
+                    uri: artist.uri
+                },
+
+                // Metadata
+                title: artist.name,
+
+                // Timestamps
+                fetchedAt
+            });
+
+            // Clean item title (for matching)
+            let title = this._cleanTitle(item.title);
+
+            // Find matching track
+            let track = Find(album.tracks.items, (track) => this._cleanTitle(track.name) === title);
+
+            if(IsNil(track)) {
+                Log.debug('Unable to find track "%s" (%s) in album: %o', item.title, title, album.tracks.items);
+
+                // Reject promise
+                return Promise.reject(new Error(
+                    'Unable to find track "' + item.title + '" in album "' + item.album.title + '"'
+                ));
+            }
+
+            // Update item
+            item.update(this.plugin.id, {
+                keys: {
+                    uri: track.uri
+                },
+
+                // Metadata
+                number: track['track_number'],
+                duration: track['duration_ms']
+            });
+
+            return item;
+        });
     }
 
-    onPausedChanged(paused) {
-        console.log(`Paused changed to ${paused}`);
+    fetchAlbum(albumUri) {
+        if(IsNil(albumUri) || albumUri.length <= 0) {
+            return Promise.reject();
+        }
+
+        // Retrieve album from cache
+        let album = this.albums.get(albumUri);
+
+        if(!IsNil(album)) {
+            return Promise.resolve(album);
+        }
+
+        // Fetch album
+        return SpotifyApi.albums.fetch(albumUri).then((album) => {
+            // Store album in cache (which is automatically removed in `AlbumCacheExpiry`)
+            this.albums.put(albumUri, album, AlbumCacheExpiry);
+
+            // Return album
+            return album;
+        });
     }
 
-    onPlayerStateChanged(player) {
-        console.log(
-            'Player state changed (' +
-                `timestamp: ${player['timestamp']}, ` +
-                `position_as_of_timestamp: ${player['position_as_of_timestamp']}` +
-            ')'
-        );
+    _cleanTitle(title) {
+        return cleanTitle(title).replace(/\s/g, '');
     }
-
-    onTrackChanged(uri) {
-        console.log(`Track changed to "${uri}"`);
-    }
-
-    // endregion
 }
 
 // Register service
