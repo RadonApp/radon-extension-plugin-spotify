@@ -124,6 +124,7 @@ export default class Interface extends EventEmitter {
             }
 
             // Emit events
+            this.emit(`event.${message.uri.substring(prefix.length)}`, message);
             this.emit('event', message);
 
             // Exit iterator

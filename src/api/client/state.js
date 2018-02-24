@@ -19,7 +19,7 @@ export default class ClientStateInterface extends Interface {
         this.current = {};
 
         // Bind to events
-        this.on('event', this.onEvent.bind(this));
+        this.on('event.subscriptions', this.onSubscriptionEvent.bind(this));
     }
 
     get(path) {
@@ -41,7 +41,7 @@ export default class ClientStateInterface extends Interface {
 
     // region Event Handlers
 
-    onEvent({payloads}) {
+    onSubscriptionEvent({payloads}) {
         if(payloads.length < 1) {
             return;
         }
