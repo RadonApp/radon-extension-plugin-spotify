@@ -22,6 +22,10 @@ export default class ClientStateInterface extends Interface {
         this.on('event', this.onEvent.bind(this));
     }
 
+    get(path) {
+        return Get(this.current, path);
+    }
+
     subscribe(connectionId, deviceId, discovery = false) {
         return this.post('subscriptions', {
             authenticated: true,
