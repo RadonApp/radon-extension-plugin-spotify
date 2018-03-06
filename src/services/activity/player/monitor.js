@@ -6,10 +6,11 @@ import MapKeys from 'lodash-es/mapKeys';
 import Merge from 'lodash-es/merge';
 
 import DocumentObserver from 'neon-extension-framework/document/observer';
-import Log from 'neon-extension-source-spotify/core/logger';
 import Plugin from 'neon-extension-source-spotify/core/plugin';
 import SpotifyApi from 'neon-extension-source-spotify/api';
 import {Artist, Album, Track} from 'neon-extension-framework/models/item/music';
+
+import Log from '../../../core/logger';
 
 
 export default class PlayerMonitor extends EventEmitter {
@@ -86,7 +87,7 @@ export default class PlayerMonitor extends EventEmitter {
     // region Event handlers
 
     onPlayerStateChanged(player) {
-        console.log(
+        Log.trace(
             'Player state changed (' +
             `timestamp: ${player['timestamp']}, ` +
             `position_as_of_timestamp: ${player['position_as_of_timestamp']}` +
@@ -110,7 +111,7 @@ export default class PlayerMonitor extends EventEmitter {
         });
 
         // Create track
-        console.log(`Track URI changed to ${metadata.track.uri}`);
+        Log.trace(`Track URI changed to ${metadata.track.uri}`);
 
         this.create();
     }
@@ -125,7 +126,7 @@ export default class PlayerMonitor extends EventEmitter {
         );
 
         // Create track
-        console.log(`Track changed to "${metadata.track.title}" (albumUri: ${metadata.album.uri})`);
+        Log.trace(`Track changed to "${metadata.track.title}" (albumUri: ${metadata.album.uri})`);
 
         this.create();
     }
@@ -140,7 +141,7 @@ export default class PlayerMonitor extends EventEmitter {
         );
 
         // Create track
-        console.log(`Artist changed to "${metadata.artist.title}" (${metadata.artist.uri})`);
+        Log.trace(`Artist changed to "${metadata.artist.title}" (${metadata.artist.uri})`);
 
         this.create();
     }
@@ -376,7 +377,7 @@ export default class PlayerMonitor extends EventEmitter {
             this.options.progressInterval
         );
 
-        console.log('Started progress emitter');
+        Log.trace('Started progress emitter');
     }
 
     _stopProgressEmitter() {
@@ -390,7 +391,7 @@ export default class PlayerMonitor extends EventEmitter {
         // Reset state
         this._progressEmitterInterval = null;
 
-        console.log('Stopped progress emitter');
+        Log.trace('Stopped progress emitter');
     }
 
     _emitProgress() {

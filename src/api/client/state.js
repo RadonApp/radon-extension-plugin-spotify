@@ -3,6 +3,7 @@ import Get from 'lodash-es/get';
 import Merge from 'lodash-es/merge';
 
 import Interface from '../core/interface';
+import Log from '../../core/logger';
 import {changedPaths} from '../core/helpers';
 
 
@@ -48,7 +49,7 @@ export default class ClientStateInterface extends Interface {
         }
 
         if(payloads.length > 1) {
-            console.warn('Multiple payloads returned', payloads);
+            Log.warn('Multiple payloads returned', payloads);
         }
 
         let state = payloads[0];

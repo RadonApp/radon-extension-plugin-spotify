@@ -4,7 +4,6 @@ import IsNil from 'lodash-es/isNil';
 import {Cache} from 'memory-cache';
 
 import ActivityService, {ActivityEngine} from 'neon-extension-framework/services/source/activity';
-import Log from 'neon-extension-source-spotify/core/logger';
 import Plugin from 'neon-extension-source-spotify/core/plugin';
 import Registry from 'neon-extension-framework/core/registry';
 import SpotifyApi from 'neon-extension-source-spotify/api';
@@ -12,6 +11,7 @@ import {Artist} from 'neon-extension-framework/models/item/music';
 import {awaitPage} from 'neon-extension-source-spotify/core/helpers';
 import {cleanTitle} from 'neon-extension-framework/core/helpers';
 
+import Log from '../../core/logger';
 import PlayerMonitor from './player/monitor';
 
 
@@ -53,7 +53,7 @@ export class SpotifyActivityService extends ActivityService {
             // Bind player monitor to page
             return this.monitor.bind(document);
         }, (err) => {
-            console.error('Unable to inject shim: %s', err.message, err);
+            Log.error('Unable to inject shim: %s', err.message, err);
             return Promise.reject(err);
         });
     }
@@ -71,7 +71,7 @@ export class SpotifyActivityService extends ActivityService {
         item.update(Plugin.id, { fetchedAt });
 
         // Fetch album metadata
-        console.log('Fetching metadata for album "%s" (track: %o)', albumUri, item);
+        Log.info('Fetching metadata for album "%s" (track: %o)', albumUri, item);
 
         return this.fetchAlbum(albumUri).then((album) => {
             let artist = album.artists[0];

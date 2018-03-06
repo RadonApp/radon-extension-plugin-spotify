@@ -3,8 +3,9 @@ import IsNil from 'lodash-es/isNil';
 import Merge from 'lodash-es/merge';
 
 import Extension from 'neon-extension-browser/extension';
-import Log from 'neon-extension-source-spotify/core/logger';
 import {createScript} from 'neon-extension-framework/core/helpers/script';
+
+import Log from '../core/logger';
 
 
 export class SpotifyShimEvents extends EventEmitter {
@@ -48,7 +49,7 @@ export class SpotifyShimEvents extends EventEmitter {
             return;
         }
 
-        console.log('received event', event);
+        Log.trace('Received event: %o', event);
 
         // Emit event
         this.emit(event.type, ...event.args);

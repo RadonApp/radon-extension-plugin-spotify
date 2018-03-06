@@ -94,8 +94,6 @@ export default class Interface extends EventEmitter {
     }
 
     send(method, url, options) {
-        console.log(method, url, options);
-
         return fetch(url, {
             method,
             ...options

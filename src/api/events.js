@@ -2,6 +2,7 @@ import EventEmitter from 'eventemitter3';
 import IsNil from 'lodash-es/isNil';
 
 import Identifier from './core/identifier';
+import Log from '../core/logger';
 
 
 const HeartbeatInterval = 30 * 1000;
@@ -91,7 +92,7 @@ export default class SpotifyEvents extends EventEmitter {
     // region Event Handlers
 
     onConnected() {
-        console.log(`Connected (connectionId: "${this.connectionId}", deviceId: "${this.deviceId}")`);
+        Log.debug(`Connected (connectionId: "${this.connectionId}", deviceId: "${this.deviceId}")`);
 
         // Create client subscription
         this.api.client.state.subscribe(this.connectionId, this.deviceId);
@@ -117,7 +118,7 @@ export default class SpotifyEvents extends EventEmitter {
     }
 
     onSocketOpened() {
-        console.log('Opened');
+        Log.trace('Opened');
 
         // Start heartbeat interval
         this._heartbeatInterval = setInterval(
@@ -136,7 +137,7 @@ export default class SpotifyEvents extends EventEmitter {
         try {
             message = JSON.parse(event.data);
         } catch(e) {
-            console.log('Unable to parse message:', event);
+            Log.warn('Unable to parse message:', event);
             return;
         }
 
@@ -145,11 +146,11 @@ export default class SpotifyEvents extends EventEmitter {
     }
 
     onSocketClosed(code) {
-        console.log(`Disconnected (code: ${code})`);
+        Log.debug(`Disconnected (code: ${code})`);
     }
 
     onSocketError(event) {
-        console.log('Error', event);
+        Log.warn('Error', event);
     }
 
     // endregion
