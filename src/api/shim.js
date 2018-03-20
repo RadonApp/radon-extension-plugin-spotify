@@ -1,8 +1,8 @@
 import EventEmitter from 'eventemitter3';
 import IsNil from 'lodash-es/isNil';
 import Merge from 'lodash-es/merge';
+import Runtime from 'wes/runtime';
 
-import Extension from 'neon-extension-browser/extension';
 import {createScript} from 'neon-extension-framework/core/helpers/script';
 
 import Log from '../core/logger';
@@ -189,7 +189,7 @@ export class SpotifyShim extends EventEmitter {
         }, options || {});
 
         return new Promise((resolve, reject) => {
-            let script = createScript(document, Extension.getUrl('/source/spotify/shim/shim.js'));
+            let script = createScript(document, Runtime.getURL('/source/spotify/shim/shim.js'));
 
             // Create events interface
             this._events = new SpotifyShimEvents();
