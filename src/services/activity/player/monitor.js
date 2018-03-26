@@ -30,8 +30,8 @@ export default class PlayerMonitor extends EventEmitter {
         this._observers = null;
         this._progressEmitterInterval = null;
 
-        // Create debounced `create` function
-        this.create = Debounce(this._create, 5000);
+        // Create debounced `refresh` function
+        this.updateTrack = Debounce(this._updateTrack, 5000);
 
         // Bind to client events
         SpotifyApi.client.state.on('player_state', this.onPlayerStateChanged.bind(this));
@@ -71,13 +71,13 @@ export default class PlayerMonitor extends EventEmitter {
         return Promise.resolve(this._observers = [
             trackInfoObserver,
 
-            // Observe name changes
+            // Update current track on name changes
             DocumentObserver.observe(trackInfoObserver, '.track-info__name a', { text: true })
-                .on('mutation', this._onTrackMutation.bind(this)),
+                .on('mutation', () => this.updateTrack()),
 
-            // Observe artist changes
+            // Update current track on artist changes
             DocumentObserver.observe(trackInfoObserver, '.track-info__artists a', { text: true })
-                .on('mutation', this._onArtistMutation.bind(this))
+                .on('mutation', () => this.updateTrack())
         ]);
     }
 
@@ -99,56 +99,22 @@ export default class PlayerMonitor extends EventEmitter {
         }
     }
 
-    onTrackUriChanged(uri) {
-        // Update state
-        let metadata = this._currentMetadata = Merge(this._currentMetadata, {
-            track: {
-                uri
-            }
-        });
+    onTrackUriChanged(trackUri) {
+        Log.trace(`Track URI changed to ${trackUri}`);
 
-        // Create track
-        Log.trace(`Track URI changed to ${metadata.track.uri}`);
+        // Update metadata
+        this._updateMetadata(trackUri);
 
-        this.create();
-    }
-
-    _onTrackMutation() {
-        let track = document.querySelector('.now-playing .track-info .track-info__name a');
-
-        // Update state
-        let metadata = this._currentMetadata = Merge(
-            this._currentMetadata,
-            this._getTrackMetadata(track)
-        );
-
-        // Create track
-        Log.trace(`Track changed to "${metadata.track.title}" (albumUri: ${metadata.album.uri})`);
-
-        this.create();
-    }
-
-    _onArtistMutation() {
-        let artists = document.querySelector('.now-playing .track-info .track-info__artists');
-
-        // Update state
-        let metadata = this._currentMetadata = Merge(
-            this._currentMetadata,
-            this._getArtistMetadata(artists)
-        );
-
-        // Create track
-        Log.trace(`Artist changed to "${metadata.artist.title}" (${metadata.artist.uri})`);
-
-        this.create();
+        // Update track
+        this.updateTrack(trackUri);
     }
 
     // endregion
 
     // region Private methods
 
-    _create() {
-        let { artist, album, track } = this._currentMetadata;
+    _updateTrack() {
+        let { artist, album, track } = this._updateMetadata();
 
         // Try construct track
         let instance = null;
@@ -156,7 +122,11 @@ export default class PlayerMonitor extends EventEmitter {
         try {
             instance = this._createTrack(artist, album, track);
         } catch(e) {
-            Log.error('Unable to create track: %s', e.message || e);
+            Log.error('Unable to create track: %s', e.message || e, {
+                artist,
+                album,
+                track
+            });
         }
 
         // Ensure track exists
@@ -280,8 +250,24 @@ export default class PlayerMonitor extends EventEmitter {
         });
     }
 
+    _updateMetadata(trackUri = null) {
+        let metadata = this._currentMetadata = Merge(this._currentMetadata, {
+            ...this._getArtistMetadata(),
+            ...this._getTrackMetadata()
+        });
 
-    _getTrackMetadata(track) {
+        // Include `trackUri` (if defined)
+        if(!IsNil(trackUri)) {
+            metadata.track.uri = trackUri;
+        }
+
+        return metadata;
+    }
+
+    _getTrackMetadata() {
+        let track = document.querySelector('.now-playing .track-info .track-info__name a');
+
+        // Default Result
         let result = {
             track: {
                 title: null
@@ -291,6 +277,7 @@ export default class PlayerMonitor extends EventEmitter {
             }
         };
 
+        // Ensure track is defined
         if(IsNil(track)) {
             return result;
         }
@@ -302,7 +289,10 @@ export default class PlayerMonitor extends EventEmitter {
         return result;
     }
 
-    _getArtistMetadata(artists) {
+    _getArtistMetadata() {
+        let artists = document.querySelector('.now-playing .track-info .track-info__artists');
+
+        // Default Result
         let result = {
             artist: {
                 uri: null,
@@ -310,6 +300,7 @@ export default class PlayerMonitor extends EventEmitter {
             }
         };
 
+        // Ensure artists are defined
         if(IsNil(artists)) {
             return result;
         }
@@ -320,6 +311,7 @@ export default class PlayerMonitor extends EventEmitter {
         if(artists.childNodes.length > 0) {
             artist = artists.childNodes[0].querySelector('a');
         } else {
+            // No artist defined
             return result;
         }
 
