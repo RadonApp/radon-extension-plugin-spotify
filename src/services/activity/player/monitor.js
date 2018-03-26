@@ -2,7 +2,6 @@ import Debounce from 'lodash-es/debounce';
 import EventEmitter from 'eventemitter3';
 import IsNil from 'lodash-es/isNil';
 import IsString from 'lodash-es/isString';
-import MapKeys from 'lodash-es/mapKeys';
 import Merge from 'lodash-es/merge';
 
 import DocumentObserver from 'neon-extension-framework/document/observer';
@@ -27,7 +26,6 @@ export default class PlayerMonitor extends EventEmitter {
         this._currentTrack = null;
 
         this._user = null;
-        this._userCountry = null;
 
         this._observers = null;
         this._progressEmitterInterval = null;
@@ -53,7 +51,6 @@ export default class PlayerMonitor extends EventEmitter {
     fetch() {
         return SpotifyApi.me.fetch().then((profile) => {
             this._user = profile;
-            this._userCountry = profile.country.toLowerCase();
         }, (err) => {
             Log.error('Unable to fetch current user profile: %s', err.message, err);
             return Promise.reject(err);
@@ -220,9 +217,9 @@ export default class PlayerMonitor extends EventEmitter {
 
         // Create track
         return Track.create(Plugin.id, {
-            keys: this._createKeys({
+            keys: {
                 uri: track.uri
-            }),
+            },
 
             // Metadata
             title: track.title,
@@ -247,9 +244,9 @@ export default class PlayerMonitor extends EventEmitter {
 
         // Create album
         return Album.create(Plugin.id, {
-            keys: this._createKeys({
+            keys: {
                 uri: album.uri
-            })
+            }
         });
     }
 
@@ -274,23 +271,15 @@ export default class PlayerMonitor extends EventEmitter {
 
         // Create artist
         return Artist.create(Plugin.id, {
-            keys: this._createKeys({
+            keys: {
                 uri: artist.uri
-            }),
+            },
 
             // Metadata
             title: artist.title
         });
     }
 
-    _createKeys(keys) {
-        return {
-            ...keys,
-
-            // Include keys with country suffixes
-            ...MapKeys(keys, (value, name) => `${name}:${this._userCountry}`)
-        };
-    }
 
     _getTrackMetadata(track) {
         let result = {
@@ -401,9 +390,8 @@ export default class PlayerMonitor extends EventEmitter {
 
         // Ensure track matches the current metadata (change might be pending)
         let track = this._currentTrack.resolve(Plugin.id);
-        let trackUri = track.keys[`uri:${this._userCountry}`];
 
-        if(trackUri !== this._currentMetadata.track.uri) {
+        if(track.keys.uri !== this._currentMetadata.track.uri) {
             return;
         }
 
