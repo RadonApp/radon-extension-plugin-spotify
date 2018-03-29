@@ -26,7 +26,6 @@ export class ShimRequests extends EventEmitter {
             return false;
         }
 
-        console.debug('Bound to "%s"', event);
         return true;
     }
 
@@ -74,8 +73,6 @@ export class Shim {
     // region Private methods
 
     _emit(type, ...args) {
-        console.log('emit', type, args);
-
         // Construct event
         let event = new CustomEvent('neon.event', {
             detail: JSON.stringify({
