@@ -92,7 +92,9 @@ export default class SpotifyEvents extends EventEmitter {
     // region Event Handlers
 
     onConnected() {
-        Log.debug(`Connected (connectionId: "${this.connectionId}", deviceId: "${this.deviceId}")`);
+        Log.info('Connected');
+        Log.debug('connectionId:', this.connectionId);
+        Log.debug('deviceId:', this.deviceId);
 
         // Create client subscription
         this.api.client.state.subscribe(this.connectionId, this.deviceId);
