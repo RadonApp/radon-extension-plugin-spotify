@@ -3,6 +3,8 @@ import ForEach from 'lodash-es/forEach';
 import IsNil from 'lodash-es/isNil';
 import URI from 'urijs';
 
+import {fetch} from 'neon-extension-framework/core/fetch';
+
 import SpotifyShim from '../shim';
 
 
@@ -94,7 +96,7 @@ export default class Interface extends EventEmitter {
     }
 
     send(method, url, options) {
-        return (content.fetch || fetch)(url, {
+        return fetch(url, {
             method,
             ...options
         }).then((response) => {
