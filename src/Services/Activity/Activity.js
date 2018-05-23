@@ -3,16 +3,16 @@ import Get from 'lodash-es/get';
 import IsNil from 'lodash-es/isNil';
 import {Cache} from 'memory-cache';
 
-import ActivityService, {ActivityEngine} from 'neon-extension-framework/services/source/activity';
-import Plugin from 'neon-extension-source-spotify/core/plugin';
-import Registry from 'neon-extension-framework/core/registry';
-import SpotifyApi from 'neon-extension-source-spotify/api';
-import {Artist} from 'neon-extension-framework/models/item/music';
-import {awaitPage} from 'neon-extension-source-spotify/core/helpers';
-import {cleanTitle} from 'neon-extension-framework/core/helpers';
+import ActivityService, {ActivityEngine} from 'neon-extension-framework/Services/Source/Activity';
+import Log from 'neon-extension-source-spotify/Core/Logger';
+import Plugin from 'neon-extension-source-spotify/Core/Plugin';
+import Registry from 'neon-extension-framework/Core/Registry';
+import SpotifyApi from 'neon-extension-source-spotify/Api';
+import {Artist} from 'neon-extension-framework/Models/Metadata/Music';
+import {awaitPage} from 'neon-extension-source-spotify/Core/Helpers';
+import {cleanTitle} from 'neon-extension-framework/Utilities/Metadata';
 
-import Log from '../../core/logger';
-import PlayerMonitor from './player/monitor';
+import {PlayerMonitor} from './Player';
 
 
 const AlbumCacheExpiry = 3 * 60 * 60 * 1000;  // 3 hours

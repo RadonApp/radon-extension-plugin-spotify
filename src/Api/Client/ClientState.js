@@ -2,9 +2,10 @@ import ForEach from 'lodash-es/forEach';
 import Get from 'lodash-es/get';
 import Merge from 'lodash-es/merge';
 
-import Interface from '../core/interface';
-import Log from '../../core/logger';
-import {changedPaths} from '../core/helpers';
+import Log from 'neon-extension-source-spotify/Core/Logger';
+
+import Interface from '../Core/Interface';
+import {changedPaths} from '../Core/Helpers';
 
 
 export default class ClientStateInterface extends Interface {

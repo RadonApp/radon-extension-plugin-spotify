@@ -3,9 +3,9 @@ import ForEach from 'lodash-es/forEach';
 import IsNil from 'lodash-es/isNil';
 import URI from 'urijs';
 
-import {fetch} from 'neon-extension-framework/core/fetch';
+import {fetch} from 'neon-extension-framework/Core/Fetch';
 
-import SpotifyShim from '../shim';
+import SpotifyShim from '../Shim';
 
 
 export default class Interface extends EventEmitter {

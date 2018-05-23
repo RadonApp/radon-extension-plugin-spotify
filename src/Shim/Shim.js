@@ -1,8 +1,8 @@
-/* eslint-disable no-console, no-new */
+/* eslint-disable no-console */
 import EventEmitter from 'eventemitter3';
 import IsNil from 'lodash-es/isNil';
 
-import Cookie from 'neon-extension-framework/document/cookie';
+import Cookie from 'neon-extension-framework/Document/Cookie';
 
 
 export class ShimRequests extends EventEmitter {
@@ -50,7 +50,7 @@ export class ShimRequests extends EventEmitter {
     }
 }
 
-export class Shim {
+export default class Shim {
     constructor() {
         this.requests = new ShimRequests();
         this.requests.on('authorization', () => this.authorization());
@@ -87,6 +87,3 @@ export class Shim {
 
     // endregion
 }
-
-// Construct shim
-(new Shim());

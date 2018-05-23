@@ -1,7 +1,7 @@
 import IsNil from 'lodash-es/isNil';
 import IsString from 'lodash-es/isString';
 
-import Interface from '../core/interface';
+import Interface from './Core/Interface';
 
 
 export default class AlbumsInterface extends Interface {

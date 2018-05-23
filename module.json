@@ -14,9 +14,9 @@
       ],
 
       "js": [
-        "common.js",
-        "source/common.js",
-        "source/spotify/spotify.js"
+        "Common.js",
+        "Modules/Common.js",
+        "Modules/neon-extension-source-spotify/Main.js"
       ]
     }
   ],
@@ -27,12 +27,12 @@
     "source/activity"
   ],
   "web_accessible_resources": [
-    "source/spotify/shim/shim.js"
+    "Modules/neon-extension-source-spotify/Shim.js"
   ],
 
   "webpack": {
-    "modules": [
-      "shim"
-    ]
+    "modules": {
+      "Shim": { "entry": true }
+    }
   }
 }

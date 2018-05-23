@@ -1,8 +1,9 @@
 import EventEmitter from 'eventemitter3';
 import IsNil from 'lodash-es/isNil';
 
-import Identifier from './core/identifier';
-import Log from '../core/logger';
+import Log from 'neon-extension-source-spotify/Core/Logger';
+
+import Identifier from './Core/Identifier';
 
 
 const HeartbeatInterval = 30 * 1000;

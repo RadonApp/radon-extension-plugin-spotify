@@ -1,5 +1,5 @@
-import ClientStateInterface from './state';
-import Interface from '../core/interface';
+import ClientStateInterface from './ClientState';
+import Interface from '../Core/Interface';
 
 
 export default class ClientInterface extends Interface {

@@ -1,11 +1,11 @@
-import Interface from './core/interface';
-import AlbumsInterface from './albums';
-import ClientInterface from './client';
-import SpotifyEvents from './events';
-import UserInterface from './user';
+import Interface from './Core/Interface';
+import AlbumsInterface from './Albums';
+import ClientInterface from './Client';
+import SpotifyEvents from './Events';
+import UserInterface from './User';
 
 
-export class SpotifyApi extends Interface {
+export default class SpotifyApi extends Interface {
     constructor() {
         super();
 
@@ -40,5 +40,3 @@ export class SpotifyApi extends Interface {
         });
     }
 }
-
-export default new SpotifyApi();

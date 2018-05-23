@@ -3,9 +3,8 @@ import IsNil from 'lodash-es/isNil';
 import Merge from 'lodash-es/merge';
 import Runtime from 'wes/runtime';
 
-import {createScript} from 'neon-extension-framework/core/helpers/script';
-
-import Log from '../core/logger';
+import Log from 'neon-extension-source-spotify/Core/Logger';
+import {createScript} from 'neon-extension-framework/Utilities/Script';
 
 
 export class SpotifyShimEvents extends EventEmitter {
@@ -189,7 +188,7 @@ export class SpotifyShim extends EventEmitter {
         }, options || {});
 
         return new Promise((resolve, reject) => {
-            let script = createScript(document, Runtime.getURL('/source/spotify/shim/shim.js'));
+            let script = createScript(document, Runtime.getURL('/Modules/neon-extension-source-spotify/Shim.js'));
 
             // Create events interface
             this._events = new SpotifyShimEvents();

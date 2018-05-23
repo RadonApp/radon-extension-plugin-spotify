@@ -1,5 +1,5 @@
-import Interface from '../core/interface';
-import UserNotificationsInterface from './notifications';
+import Interface from '../Core/Interface';
+import UserNotificationsInterface from './UserNotifications';
 
 
 export default class UserInterface extends Interface {

@@ -1,5 +1,5 @@
-import Log from 'neon-extension-source-spotify/core/logger';
-import {awaitBody, awaitElements} from 'neon-extension-framework/document/await';
+import Log from 'neon-extension-source-spotify/Core/Logger';
+import {awaitBody, awaitElements} from 'neon-extension-framework/Document/Await';
 
 
 export function awaitPage() {
