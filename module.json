@@ -22,9 +22,8 @@
   ],
 
   "services": [
-    "configuration",
-
-    "source/activity"
+    "Configuration",
+    "Source:Activity"
   ],
   "web_accessible_resources": [
     "Modules/neon-extension-source-spotify/Shim.js"
