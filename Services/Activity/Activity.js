@@ -4,14 +4,14 @@ import IsNil from 'lodash-es/isNil';
 import {Cache} from 'memory-cache';
 
 import ActivityService, {ActivityEngine} from 'neon-extension-framework/Services/Source/Activity';
-import Log from 'neon-extension-source-spotify/Core/Logger';
-import Plugin from 'neon-extension-source-spotify/Core/Plugin';
 import Registry from 'neon-extension-framework/Core/Registry';
-import SpotifyApi from 'neon-extension-source-spotify/Api';
 import {Artist} from 'neon-extension-framework/Models/Metadata/Music';
-import {awaitPage} from 'neon-extension-source-spotify/Core/Helpers';
 import {cleanTitle} from 'neon-extension-framework/Utilities/Metadata';
 
+import Log from '../../Core/Logger';
+import Plugin from '../../Core/Plugin';
+import SpotifyApi from '../../Api';
+import {awaitPage} from '../../Core/Helpers';
 import {PlayerMonitor} from './Player';
 
 

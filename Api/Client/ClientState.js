@@ -2,8 +2,7 @@ import ForEach from 'lodash-es/forEach';
 import Get from 'lodash-es/get';
 import Merge from 'lodash-es/merge';
 
-import Log from 'neon-extension-source-spotify/Core/Logger';
-
+import Log from '../../Core/Logger';
 import Interface from '../Core/Interface';
 import {changedPaths} from '../Core/Helpers';
 

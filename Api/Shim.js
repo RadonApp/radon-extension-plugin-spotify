@@ -3,8 +3,9 @@ import IsNil from 'lodash-es/isNil';
 import Merge from 'lodash-es/merge';
 import Runtime from 'wes/runtime';
 
-import Log from 'neon-extension-source-spotify/Core/Logger';
 import {createScript} from 'neon-extension-framework/Utilities/Script';
+
+import Log from '../Core/Logger';
 
 
 export class SpotifyShimEvents extends EventEmitter {

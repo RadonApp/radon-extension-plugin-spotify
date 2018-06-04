@@ -5,10 +5,11 @@ import IsString from 'lodash-es/isString';
 import Merge from 'lodash-es/merge';
 
 import DocumentObserver from 'neon-extension-framework/Document/Observer';
-import Log from 'neon-extension-source-spotify/Core/Logger';
-import Plugin from 'neon-extension-source-spotify/Core/Plugin';
-import SpotifyApi from 'neon-extension-source-spotify/Api';
 import {Artist, Album, Track} from 'neon-extension-framework/Models/Metadata/Music';
+
+import Log from '../../../Core/Logger';
+import Plugin from '../../../Core/Plugin';
+import SpotifyApi from '../../../Api';
 
 
 export default class PlayerMonitor extends EventEmitter {

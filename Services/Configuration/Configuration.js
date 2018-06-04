@@ -1,7 +1,7 @@
 import ConfigurationService from 'neon-extension-framework/Services/Configuration';
-import Plugin from 'neon-extension-source-spotify/Core/Plugin';
 import Registry from 'neon-extension-framework/Core/Registry';
 
+import Plugin from '../../Core/Plugin';
 import Options from './options';
 
 

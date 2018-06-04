@@ -1,6 +1,7 @@
 import {Page} from 'neon-extension-framework/Models/Configuration';
 import {EnableOption} from 'neon-extension-framework/Models/Configuration/Options';
-import Plugin from 'neon-extension-source-spotify/Core/Plugin';
+
+import Plugin from '../../Core/Plugin';
 
 
 export default [
