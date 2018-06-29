@@ -1,5 +1,5 @@
-# Neon Extension: Spotify
+# Radon Extension: Spotify
 
 [![](https://img.shields.io/travis/NeApp/neon-extension-source-spotify/master.svg)](https://travis-ci.org/NeApp/neon-extension-source-spotify) [![](https://img.shields.io/coveralls/github/NeApp/neon-extension-source-spotify/master.svg)](https://coveralls.io/github/NeApp/neon-extension-source-spotify) ![](https://img.shields.io/github/license/NeApp/neon-extension-source-spotify.svg)
 
-[Neon Extension](https://github.com/NeApp/neon-extension) Source for Spotify.
+[Radon Extension](https://github.com/NeApp/neon-extension) Source for Spotify.
