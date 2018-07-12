@@ -2,7 +2,7 @@
 import EventEmitter from 'eventemitter3';
 import IsNil from 'lodash-es/isNil';
 
-import Cookie from 'neon-extension-framework/Document/Cookie';
+import Cookie from '@radon-extension/framework/Document/Cookie';
 
 
 export class ShimRequests extends EventEmitter {

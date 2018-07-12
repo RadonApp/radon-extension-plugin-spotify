@@ -4,8 +4,8 @@ import IsNil from 'lodash-es/isNil';
 import IsString from 'lodash-es/isString';
 import Merge from 'lodash-es/merge';
 
-import DocumentObserver from 'neon-extension-framework/Document/Observer';
-import {Artist, Album, Track} from 'neon-extension-framework/Models/Metadata/Music';
+import DocumentObserver from '@radon-extension/framework/Document/Observer';
+import {Artist, Album, Track} from '@radon-extension/framework/Models/Metadata/Music';
 
 import Log from '../../../Core/Logger';
 import Plugin from '../../../Core/Plugin';

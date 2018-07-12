@@ -3,7 +3,7 @@ import ForEach from 'lodash-es/forEach';
 import IsNil from 'lodash-es/isNil';
 import URI from 'urijs';
 
-import {fetch} from 'neon-extension-framework/Core/Fetch';
+import {fetch} from '@radon-extension/framework/Core/Fetch';
 
 import SpotifyShim from '../Shim';
 

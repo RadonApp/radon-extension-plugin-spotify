@@ -3,7 +3,7 @@ import IsNil from 'lodash-es/isNil';
 import Merge from 'lodash-es/merge';
 import Runtime from 'wes/runtime';
 
-import {createScript} from 'neon-extension-framework/Utilities/Script';
+import {createScript} from '@radon-extension/framework/Utilities/Script';
 
 import Log from '../Core/Logger';
 

@@ -3,7 +3,7 @@ node_js:
 - '7'
 before_install:
 - npm install -g npm@'^5.10.0'
-- npm install -g NeApp/neon-extension-build#$TRAVIS_BRANCH || npm install -g NeApp/neon-extension-build#develop
+- npm install -g RadonApp/radon-extension-build#$TRAVIS_BRANCH || npm install -g RadonApp/radon-extension-build#develop
 install:
 - neb travis:install $TRAVIS_BRANCH
 - neb package:validate
@@ -21,5 +21,5 @@ deploy:
   api_key:
     secure: bD8cYqyT5NJWD07vL6I0XTy+NqLKboy4fMXoIVlrxPrZO6WQ3N2GEYrL8WFZwo/iAYngJ7Nr8I1jvuf0bt41HLY93TTHs2ip5JDmLRj+YuG3oGeLUcxLvZcZvTSBAXeVC2sTmFR5cdtNzhs47lLcnSjATA9sGEZVTssJgK7vwKGvxXTf0dDQDo/+r2FqbZUIALobFLbLTDs0JR6i+KqQWJXZMQC0dP97xkPoEOw2Erjp9P6CdMqeQAmA70A4Fmc/d3PBe5XyNmYn6xlLc7XSgxnBXrxyJpZ1DdZTkuv7Ofu+/mGHfVvOFqkjOgf8mfwKCSyK2xj5Wztlm+nWn3isa20duahdXQPr5rLY5jPGa6ng9eeWGd26E7davTL4Dw6oOLBaEMThpRPml2unfDNJTXSLVGIjg7yB4Cj5Rsrtu+HJmIqHZfSSh+C226vjHO1SQyZMH2EWg0ipedMND49hDWNQljNVp65akBwBLonGFY0ptbMSaiyuKv1SL6BtQxfLaxhB5Plla9XHn46KxBZSuxgHfyCElrB5be9KKcNw5bVN1qrtjhJB5AoaaDwall4R8LhJY04XVH6GN6sHf+U5rySlSsLCjksa9nprZin7Z94+UWCasW+sD0QFudvYmUsctn+wegekyP98/rV5xWBKzcO363u5OaV+djeuExyP01s=
   on:
-    repo: NeApp/neon-extension-source-spotify
+    repo: RadonApp/radon-extension-plugin-spotify
     tags: true
