@@ -189,7 +189,7 @@ export class SpotifyShim extends EventEmitter {
         }, options || {});
 
         return new Promise((resolve, reject) => {
-            let script = createScript(document, Runtime.getURL('/Modules/neon-extension-source-spotify/Shim.js'));
+            let script = createScript(document, Runtime.getURL('/Plugins/spotify/Shim.js'));
 
             // Create events interface
             this._events = new SpotifyShimEvents();
