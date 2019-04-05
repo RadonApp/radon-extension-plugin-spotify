@@ -91,6 +91,14 @@ export default class PlayerMonitor extends EventEmitter {
             ')'
         );
 
+        // Ensure event is for the current track
+        let track = this._currentTrack && this._currentTrack.resolve(Plugin.id);
+
+        if(!track || player['track']['uri'] !== track.keys.uri) {
+            Log.info('Ignoring player state change for invalid track');
+            return;
+        }
+
         // Start/Stop Progress Emitter
         if(player['is_playing'] && !player['is_paused']) {
             this._start();
