@@ -9,9 +9,7 @@ import SpotifyShim from '../Shim';
 
 
 export default class Interface extends EventEmitter {
-    static eventPrefixes = [
-        'https://api.spotify.com'
-    ];
+    static eventPrefixes = [];
 
     static url = 'https://api.spotify.com';
 

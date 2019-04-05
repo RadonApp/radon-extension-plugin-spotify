@@ -9,11 +9,10 @@ import {changedPaths} from '../Core/Helpers';
 
 export default class ClientStateInterface extends Interface {
     static eventPrefixes = [
-        'https://api.spotify.com/connect-api/v2/state/',
-        'https://gae-spclient.spotify.com/connect-api/v2/state/'
+        'hm://connect-state/v1/'
     ];
 
-    static url = 'https://gae-spclient.spotify.com/connect-api/v2/state';
+    static url = 'https://spclient.wg.spotify.com/connect-state/v1';
 
     constructor() {
         super();
@@ -21,7 +20,7 @@ export default class ClientStateInterface extends Interface {
         this.current = {};
 
         // Bind to events
-        this.on('event.subscriptions', this.onSubscriptionEvent.bind(this));
+        this.on('event.cluster', this.onClusterEvent.bind(this));
     }
 
     get(path) {
@@ -29,21 +28,31 @@ export default class ClientStateInterface extends Interface {
     }
 
     subscribe(connectionId, deviceId, discovery = false) {
-        return this.post('subscriptions', {
+        return this.put(`devices/hobs_${deviceId}`, {
             authenticated: true,
 
             body: {
-                'connection_id': connectionId,
-                'name': deviceId,
+                'device': {
+                    'device_info': {
+                        'capabilities': {
+                            'can_be_player': false,
+                            'hidden': true
+                        }
+                    }
+                },
 
-                'enable_discovery': discovery
+                'member_type': 'CONNECT_STATE'
+            },
+
+            headers: {
+                'X-Spotify-Connection-Id': connectionId
             }
         });
     }
 
     // region Event Handlers
 
-    onSubscriptionEvent({payloads}) {
+    onClusterEvent({ payloads }) {
         if(payloads.length < 1) {
             return;
         }
@@ -52,7 +61,12 @@ export default class ClientStateInterface extends Interface {
             Log.warn('Multiple payloads returned', payloads);
         }
 
-        let state = payloads[0];
+        if(!payloads[0] || !payloads[0].cluster) {
+            Log.warn('Ignoring invalid cluster event');
+            return;
+        }
+
+        let state = payloads[0].cluster;
 
         // Find changed paths
         let changed = changedPaths(this.current, state, {

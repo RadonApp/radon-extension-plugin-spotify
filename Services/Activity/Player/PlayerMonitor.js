@@ -389,8 +389,9 @@ export default class PlayerMonitor extends EventEmitter {
 
         // Retrieve state
         let paused = SpotifyApi.client.state.get('player_state.is_paused');
-        let position = SpotifyApi.client.state.get('player_state.position_as_of_timestamp');
-        let timestamp = SpotifyApi.client.state.get('player_state.timestamp');
+
+        let position = parseInt(SpotifyApi.client.state.get('player_state.position_as_of_timestamp'), 10);
+        let timestamp = parseInt(SpotifyApi.client.state.get('player_state.timestamp'), 10);
 
         // Calculate current time
         let time = position;
