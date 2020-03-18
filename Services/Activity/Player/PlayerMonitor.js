@@ -259,9 +259,18 @@ export default class PlayerMonitor extends EventEmitter {
     }
 
     _updateMetadata(trackUri = null) {
+        let links = Array.from(document.querySelectorAll(
+            '.Root__top-container .now-playing .react-contextmenu-wrapper a'
+        ));
+
+        if(links.length < 1) {
+            return null;
+        }
+
+        // Create metadata
         let metadata = this._currentMetadata = Merge(this._currentMetadata, {
-            ...this._getArtistMetadata(),
-            ...this._getTrackMetadata()
+            ...this._getTrackMetadata(links[0]),
+            ...this._getArtistMetadata(links.slice(1))
         });
 
         // Include `trackUri` (if defined)
@@ -272,9 +281,7 @@ export default class PlayerMonitor extends EventEmitter {
         return metadata;
     }
 
-    _getTrackMetadata() {
-        let track = document.querySelector('.now-playing .track-info .track-info__name a');
-
+    _getTrackMetadata(track) {
         // Default Result
         let result = {
             track: {
@@ -297,9 +304,8 @@ export default class PlayerMonitor extends EventEmitter {
         return result;
     }
 
-    _getArtistMetadata() {
-        let artists = document.querySelector('.now-playing .track-info .track-info__artists');
-
+    // TODO Support multiple artists
+    _getArtistMetadata(artists) {
         // Default Result
         let result = {
             artist: {
@@ -316,10 +322,9 @@ export default class PlayerMonitor extends EventEmitter {
         // Pick first artist
         let artist = null;
 
-        if(artists.childNodes.length > 0) {
-            artist = artists.childNodes[0].querySelector('a');
+        if(artists.length > 0) {
+            artist = artists[0];
         } else {
-            // No artist defined
             return result;
         }
 
