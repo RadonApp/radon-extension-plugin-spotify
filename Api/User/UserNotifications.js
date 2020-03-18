@@ -2,8 +2,8 @@ import Interface from '../Core/Interface';
 
 
 export default class UserNotificationsInterface extends Interface {
-    constructor(username) {
-        super();
+    constructor(username, options) {
+        super(options);
 
         this.username = username;
     }

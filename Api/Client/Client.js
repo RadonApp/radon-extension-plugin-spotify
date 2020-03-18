@@ -5,12 +5,12 @@ import Interface from '../Core/Interface';
 export default class ClientInterface extends Interface {
     static url = 'https://gae-spclient.spotify.com/connect-api';
 
-    constructor() {
-        super();
+    constructor(options) {
+        super(options);
 
         // Create children
         this.interfaces = {
-            state: new ClientStateInterface()
+            state: new ClientStateInterface(options)
         };
     }
 

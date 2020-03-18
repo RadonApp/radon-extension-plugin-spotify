@@ -11,6 +11,7 @@ import {cleanTitle} from '@radon-extension/framework/Utilities/Metadata';
 import Log from '../../Core/Logger';
 import Plugin from '../../Core/Plugin';
 import SpotifyApi from '../../Api';
+import SpotifyShim from '../../Api/Shim';
 import {awaitPage} from '../../Core/Helpers';
 import {PlayerMonitor} from './Player';
 
@@ -49,7 +50,7 @@ export class SpotifyActivityService extends ActivityService {
         this.engine.bind(this.monitor);
 
         // Inject shim into page
-        return SpotifyApi.shim.inject().then(() => {
+        return SpotifyShim.inject().then(() => {
             // Bind player monitor to page
             return this.monitor.bind(document);
         }, (err) => {

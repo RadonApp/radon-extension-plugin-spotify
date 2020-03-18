@@ -2,8 +2,6 @@
 import EventEmitter from 'eventemitter3';
 import IsNil from 'lodash-es/isNil';
 
-import Cookie from '@radon-extension/framework/Document/Cookie';
-
 
 export class ShimRequests extends EventEmitter {
     constructor() {
@@ -53,21 +51,9 @@ export class ShimRequests extends EventEmitter {
 export default class Shim {
     constructor() {
         this.requests = new ShimRequests();
-        this.requests.on('authorization', () => this.authorization());
 
         // Emit "ready" event
         this._emit('ready');
-    }
-
-    authorization() {
-        let cookies = Cookie.all();
-
-        // Emit authorization details
-        this._emit('authorization', {
-            token: cookies['wp_access_token'],
-            expiresAt: cookies['wp_expiration'],
-            expiresIn: cookies['wp_expires_in']
-        });
     }
 
     // region Private methods

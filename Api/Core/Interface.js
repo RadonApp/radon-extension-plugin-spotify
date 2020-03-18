@@ -5,17 +5,23 @@ import URI from 'urijs';
 
 import {fetch} from '@radon-extension/framework/Core/Fetch';
 
-import SpotifyShim from '../Shim';
-
 
 export default class Interface extends EventEmitter {
     static eventPrefixes = [];
 
     static url = 'https://api.spotify.com';
 
-    constructor() {
+    constructor(options) {
         super();
 
+        // Options
+        this.options = {
+            getAccessToken: null,
+
+            ...(options || {})
+        };
+
+        // Interfaces
         this.interfaces = {};
 
         // Bind to events
@@ -28,10 +34,6 @@ export default class Interface extends EventEmitter {
 
     get url() {
         return this.constructor.url;
-    }
-
-    get shim() {
-        return SpotifyShim;
     }
 
     get(url, options) {
@@ -47,12 +49,6 @@ export default class Interface extends EventEmitter {
     }
 
     request(method, url, options) {
-        if(!this.shim.injected) {
-            return Promise.reject(new Error(
-                'Shim hasn\'t been injected yet'
-            ));
-        }
-
         // Set default options
         options = {
             authenticated: false,
@@ -82,8 +78,12 @@ export default class Interface extends EventEmitter {
                     return Promise.resolve();
                 }
 
-                return SpotifyShim.authorization().then((authorization) => {
-                    options.headers['Authorization'] = `Bearer ${authorization.token}`;
+                if(IsNil(this.options.getAccessToken)) {
+                    throw new Error('Interface doesn\'t support authentication ("getAccessToken" not defined)');
+                }
+
+                return this.options.getAccessToken().then(({accessToken}) => {
+                    options.headers['Authorization'] = `Bearer ${accessToken}`;
                 });
             })
             // Send request

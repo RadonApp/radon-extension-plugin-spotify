@@ -56,11 +56,10 @@ export default class SpotifyEvents extends EventEmitter {
         // Retrieve access points
         return this.api.getAccessPoints().then(({ dealer }) =>
             // Retrieve authorization
-            this.api.shim.authorization().then(({ token }) =>
-                this._getUrl(dealer[0], token)
+            this.api.getAccessToken().then(({accessToken}) =>
+                this._getUrl(dealer[0], accessToken)
             )
         );
-
     }
 
     send(message) {
@@ -159,7 +158,7 @@ export default class SpotifyEvents extends EventEmitter {
 
     // region Private Methods
 
-    _getUrl(dealer, token) {
+    _getUrl(dealer, accessToken) {
         let pos = dealer.indexOf(':');
         let url;
 
@@ -177,7 +176,7 @@ export default class SpotifyEvents extends EventEmitter {
         }
 
         // Add access token
-        return `${url}?access_token=${token}`;
+        return `${url}?access_token=${accessToken}`;
     }
 
     // endregion

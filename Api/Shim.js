@@ -88,12 +88,6 @@ export class SpotifyShim extends EventEmitter {
         return this._injecting;
     }
 
-    authorization() {
-        return this.inject().then(() =>
-            this._request('authorization')
-        );
-    }
-
     // region Private methods
 
     _await(type, options) {

@@ -3,14 +3,14 @@ import UserNotificationsInterface from './UserNotifications';
 
 
 export default class UserInterface extends Interface {
-    constructor(username) {
-        super();
+    constructor(username, options) {
+        super(options);
 
         this.username = username;
 
         // Create children
         this.interfaces = {
-            notifications: new UserNotificationsInterface(username)
+            notifications: new UserNotificationsInterface(username, options)
         };
     }
 

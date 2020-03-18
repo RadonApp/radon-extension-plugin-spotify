@@ -14,8 +14,8 @@ export default class ClientStateInterface extends Interface {
 
     static url = 'https://spclient.wg.spotify.com/connect-state/v1';
 
-    constructor() {
-        super();
+    constructor(options) {
+        super(options);
 
         this.current = {};
 

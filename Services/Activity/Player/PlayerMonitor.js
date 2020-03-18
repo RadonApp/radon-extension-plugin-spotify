@@ -40,10 +40,10 @@ export default class PlayerMonitor extends EventEmitter {
 
     bind() {
         return Promise.resolve()
-            // Fetch user profile
-            .then(() => this.fetch())
             // Connect to the events websocket
             .then(() => this.connect())
+            // Fetch user profile
+            .then(() => this.fetch())
             // Start observing document for changes
             .then(() => this.observe());
     }
